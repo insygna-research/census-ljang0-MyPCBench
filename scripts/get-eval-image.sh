@@ -38,6 +38,7 @@ DOCKERHUB_ORG="ljang"
 # huggingface.co/datasets/ljang0/...). A same-named MODEL repo also exists but
 # is stale/orphaned and must NOT be used — keep repo_type="dataset" everywhere.
 HF_REPO="ljang0/mypcbench-qemu-baseline"
+NO_DECOMPRESS=0
 
 usage() { sed -n '2,30p' "$0" | sed 's/^# \{0,1\}//'; exit "${1:-0}"; }
 
@@ -47,6 +48,7 @@ while [[ $# -gt 0 ]]; do
     --out)    OUT="$2"; shift 2;;
     --org)    DOCKERHUB_ORG="$2"; shift 2;;
     --hf-repo) HF_REPO="$2"; shift 2;;
+    --no-decompress) NO_DECOMPRESS=1; shift;;
     -h|--help) usage 0;;
     *) echo "Unknown arg: $1" >&2; usage 1;;
   esac
@@ -140,6 +142,46 @@ PY
   echo "      dnf install edk2-ovmf) or set MYPCBENCH_OVMF_CODE yourself."
 else
   echo "--method must be auto|skopeo|hf" >&2; exit 1
+fi
+
+# Decompress qcow2 clusters for fast in-VM I/O.
+#
+# The published image is zlib-compressed at the qcow2 cluster level (~5 GB
+# on disk vs ~10 GB uncompressed). Every host read decompresses on the fly,
+# which serializes I/O when 4 VMs + 17 web apps + GNOME boot at once and
+# manifests as transient connection-refused failures on the in-VM control
+# HTTP server. Converting to uncompressed clusters once, here, removes the
+# decompression overhead entirely and matches the runtime behavior of the
+# paper-baseline image. Skip with --no-decompress if you're disk-constrained
+# (or can't install qemu-img) and want to keep the ~5 GB on-disk size at the
+# cost of occasional retry storms on slower hosts.
+if [[ "$NO_DECOMPRESS" == 0 ]] && command -v qemu-img >/dev/null 2>&1; then
+  compressed_pct="$(qemu-img check "$OUT/mypcbench.qcow2" 2>/dev/null \
+                   | sed -nE 's/.*([0-9.]+)% compressed clusters.*/\1/p' | head -1)"
+  if [[ -n "$compressed_pct" ]] && [[ "${compressed_pct%.*}" -gt 0 ]]; then
+    echo "==> decompressing qcow2 (${compressed_pct}% compressed clusters → 0%)"
+    echo "    (rationale: avoid host decompression overhead during multi-VM"
+    echo "     boot; skip with --no-decompress if disk-constrained)"
+    tmp_dst="$OUT/mypcbench.qcow2.uncompressed"
+    if qemu-img convert -p -O qcow2 -o cluster_size=64K \
+                        "$OUT/mypcbench.qcow2" "$tmp_dst"; then
+      mv -f "$tmp_dst" "$OUT/mypcbench.qcow2"
+      qemu-img check "$OUT/mypcbench.qcow2" | sed 's/^/    /'
+    else
+      echo "    qemu-img convert failed — keeping the compressed image" >&2
+      rm -f "$tmp_dst"
+    fi
+  else
+    echo "==> qcow2 already uncompressed; no convert needed"
+  fi
+else
+  if [[ "$NO_DECOMPRESS" == 1 ]]; then
+    echo "==> skipping decompress per --no-decompress"
+  else
+    echo "==> skipping decompress (qemu-img not on PATH)"
+    echo "    install qemu-utils/qemu-img to enable; otherwise the runner"
+    echo "    may see transient localhost:* connection-refused under load."
+  fi
 fi
 
 # Emit a sourceable env file

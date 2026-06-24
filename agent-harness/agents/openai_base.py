@@ -175,7 +175,7 @@ class OpenAIBaseAgent(BaseAgent):
         client_password: str = "password",
         enable_computer: bool = True,
         env=None,
-        max_output_tokens: int = 1500,  # was 4096 — OSWorld uses 1500
+        max_output_tokens: Optional[int] = 1500,  # was 4096 — OSWorld uses 1500. Env override below: MYPCBENCH_OPENAI_MAX_OUTPUT_TOKENS unset/empty/"0" → None (omit field, no cap).
         # Temperature/top_p default to None — GPT-5.x reasoning models
         # REJECT non-default sampling (`temperature != 1`) with a 400 error,
         # and the legacy `computer-use-preview` tolerates defaults too. The
@@ -189,7 +189,12 @@ class OpenAIBaseAgent(BaseAgent):
     ):
         super().__init__(model, screen_size, client_password)
         self.env = env
-        self.max_output_tokens = max_output_tokens
+        _env_max = os.environ.get("MYPCBENCH_OPENAI_MAX_OUTPUT_TOKENS")
+        if _env_max is not None:
+            _env_max = _env_max.strip()
+            self.max_output_tokens = None if _env_max in ("", "0") else int(_env_max)
+        else:
+            self.max_output_tokens = max_output_tokens
         self.temperature = temperature
         self.top_p = top_p
         self.reasoning_effort = reasoning_effort
@@ -347,8 +352,9 @@ class OpenAIBaseAgent(BaseAgent):
             "input": input_items,
             "tools": self.tools,
             "truncation": "auto",
-            "max_output_tokens": self.max_output_tokens,
         }
+        if self.max_output_tokens is not None:
+            request["max_output_tokens"] = self.max_output_tokens
         # Reasoning / extended thinking. GPT-5.x Responses API accepts
         # reasoning.effort ∈ {"low","medium","high"} (and "xhigh" for 5.4).
         # Non-reasoning models (gpt-4.1-mini, gpt-4o, gpt-4o-mini) REJECT
@@ -398,10 +404,41 @@ class OpenAIBaseAgent(BaseAgent):
                 break
             except Exception as e:
                 last_error = e
+                _err_str = str(e)
                 logger.warning(
                     "OpenAI API error (attempt %d/%d): %s",
-                    attempt + 1, self.api_retry_times, str(e)[:200],
+                    attempt + 1, self.api_retry_times, _err_str[:200],
                 )
+                # Harness-side state corruption recovery. The Responses API
+                # rejects requests whose `previous_response_id` references a
+                # turn whose tool calls were never acknowledged ("No tool
+                # output found for computer call call_X"). This happens when
+                # the in-VM control API drops a round-trip (e.g. transient
+                # localhost:* connection refused) and we never sent the
+                # corresponding tool output back. The state mismatch is
+                # permanent — every retry with the same previous_response_id
+                # gets the same rejection. Clear the stale id so the next
+                # attempt sends a fresh prompt with the current screenshot
+                # and the agent can continue from a clean turn. This is NOT
+                # masking a model failure: the model couldn't have recovered
+                # here because its conversation handle was poisoned by the
+                # harness's failed delivery.
+                if (
+                    "No tool output found" in _err_str
+                    or "no tool output" in _err_str.lower()
+                ):
+                    logger.warning(
+                        "Detected stale tool-call state on previous_response_id=%s; "
+                        "clearing to recover (harness round-trip dropped)",
+                        (self.previous_response_id or "")[:12],
+                    )
+                    self.previous_response_id = None
+                    if hasattr(self, "pending_items"):
+                        try:
+                            self.pending_items.clear()
+                        except Exception:
+                            pass
+                    request.pop("previous_response_id", None)
                 if attempt < self.api_retry_times - 1:
                     time.sleep(min(5.0, (attempt + 1) * 2.0))
         if response is None:
