@@ -948,25 +948,39 @@ class MyPCBenchEnv:
         except Exception:
             return False
 
-    def _prewarm_lazy_dbs(self, subset: Optional[set] = None, max_retries: int = 3) -> None:
+    def _prewarm_lazy_dbs(self, subset: Optional[set] = None, max_retries: int = 3,
+                          require: Optional[bool] = None) -> None:
         """Hit each app's bootstrap endpoint AND verify the per-VM DB is
         populated afterward. Retries up to `max_retries` times per app
-        before giving up. Logs (but doesn't raise) if an app's assertion
-        fails after all retries — production callers can decide whether
-        to fail-fast or proceed.
+        before giving up.
+
+        An app counts as warmed only when BOTH gates pass: its HTTP
+        bootstrap endpoint returns 2xx (the server actually serves — not a
+        black hole) AND the per-app assertion query returns ≥1 row (the DB
+        is populated). Checking only the DB would let a wedged HTTP server
+        through, so the agent could run against a non-serving app and the
+        rubric would silently score 0.
 
         If `subset` is given (set of db filenames like `{"hoolicalendar.sqlite"}`),
         only warm the apps whose DB is in that set. Otherwise warm every
         app in `_LAZY_DB_WARMUPS`.
+
+        Fail-fast: when `require` is True (or, if `require` is None, when the
+        MYPCBENCH_REQUIRE_APPS env var is not "0"), an app that still fails
+        after all retries raises RuntimeError so the task errors out before
+        the agent burns API tokens on a broken VM. Set MYPCBENCH_REQUIRE_APPS=0
+        to fall back to the old warn-and-proceed behaviour.
         """
+        if require is None:
+            require = os.environ.get("MYPCBENCH_REQUIRE_APPS", "1") not in ("0", "false", "no")
         failed_apps: list[str] = []
         for db_name, app, port, path in self._LAZY_DB_WARMUPS:
             if subset is not None and db_name not in subset:
                 continue
             ok = False
             for attempt in range(max_retries):
-                self._warmup_one_app(app, port, path)
-                if self._assert_lazy_db_populated(db_name):
+                served = self._warmup_one_app(app, port, path)
+                if served and self._assert_lazy_db_populated(db_name):
                     ok = True
                     break
                 # Cold-start migrations can be slow; back off and retry.
@@ -984,6 +998,13 @@ class MyPCBenchEnv:
                 "Consider increasing the per-app retry timeout.",
                 len(failed_apps), failed_apps,
             )
+            if require:
+                raise RuntimeError(
+                    f"App(s) failed warmup/health after {max_retries} retries: "
+                    f"{failed_apps}. Aborting before the agent runs so the task "
+                    "errors instead of scoring a dead VM to a silent 0. Set "
+                    "MYPCBENCH_REQUIRE_APPS=0 to warn-and-proceed instead."
+                )
 
         # Backfill seed-data fields left at their default in the shipped image
         # but referenced by task grading. Only runs when dinoco-airlines is
