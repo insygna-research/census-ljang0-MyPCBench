@@ -99,7 +99,7 @@
           "weight": 0.108268
         },
         {
-          "criterion": "Agent locates your most recent Cooper's Seafood House order in history",
+          "criterion": "Agent locates Michael's most recent delivered/received Cooper's Seafood House order in history (the order he actually got last time, not a cancelled order)",
           "type": "llm_judge",
           "weight": 0.108268
         },
@@ -109,7 +109,7 @@
           "weight": 0.108268
         },
         {
-          "criterion": "Agent adds the exact same item(s) from Michael's most recent Cooper's Seafood House order (as shown in his HangryDash order history) into the new cart",
+          "criterion": "Agent adds the exact same item(s) from Michael's most recent delivered Cooper's Seafood House order (the items he actually got last time, as shown in his HangryDash order history) into the new cart",
           "type": "llm_judge",
           "weight": 0.137795
         },

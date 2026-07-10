@@ -413,7 +413,7 @@
           "weight": 0.3
         },
         {
-          "criterion": "Agent reports the count of completed Dinoco flights in the past 12 months and the total miles for that window (even 1-2 flights is a valid result)",
+          "criterion": "Agent reports the count of completed Dinoco flights in the past 12 months (reconciling to the ~6 completed flights seeded in the live flight history, not a partial 1-2 subset) and the total miles for that window",
           "type": "llm_judge",
           "weight": 0.15
         },
@@ -711,27 +711,27 @@
         {
           "criterion": "Agent locates Somehow_I_Manage_Chapter_1.txt in ~/Documents and reports its absolute path",
           "type": "llm_judge",
-          "weight": 0.2
+          "weight": 0.3
         },
         {
           "criterion": "Agent provides a faithful, coherent summary of Chapter 1's content in Michael's voice and tone",
           "type": "llm_judge",
-          "weight": 0.2
+          "weight": 0.3
         },
         {
           "criterion": "Agent writes two additional chapters (Chapter 2 and Chapter 3, or equivalent) that continue the 'Somehow I Manage' book in Michael Scott's boss-lore style",
           "type": "llm_judge",
-          "weight": 0.3
+          "weight": 0.2
         },
         {
           "criterion": "Agent opens or creates a LibreOffice Writer document (.odt or .docx) to write the two new chapter extensions",
           "type": "llm_judge",
-          "weight": 0.2
+          "weight": 0.133333
         },
         {
           "criterion": "Agent's chapter extensions maintain Michael's over-the-top, self-aggrandizing management-wisdom tone consistent with Chapter 1",
           "type": "llm_judge",
-          "weight": 0.1
+          "weight": 0.066667
         }
       ]
     }
@@ -851,7 +851,7 @@
           "weight": 0.108268
         },
         {
-          "criterion": "Agent locates your most recent Cooper's Seafood House order in history",
+          "criterion": "Agent locates Michael's most recent delivered/received Cooper's Seafood House order in history (the order he actually got last time, not a cancelled order)",
           "type": "llm_judge",
           "weight": 0.108268
         },
@@ -861,7 +861,7 @@
           "weight": 0.108268
         },
         {
-          "criterion": "Agent adds the exact same item(s) from Michael's most recent Cooper's Seafood House order (as shown in his HangryDash order history) into the new cart",
+          "criterion": "Agent adds the exact same item(s) from Michael's most recent delivered Cooper's Seafood House order (the items he actually got last time, as shown in his HangryDash order history) into the new cart",
           "type": "llm_judge",
           "weight": 0.137795
         },
@@ -1088,12 +1088,12 @@
           "weight": 0.098361
         },
         {
-          "criterion": "Agent adds Pam, Dwight, Kevin, Jim, and Holly as attendees on each of the 5 Dundies prep events, or notes clearly that HooliCalendar's event editor does not expose an attendees picker and records the intended invitee list in the event body / description so Michael can follow up",
+          "criterion": "Agent adds Pam, Dwight, Kevin, Jim, and Holly as attendees on each of the 5 Dundies prep events (HooliCalendar's event editor exposes an attendees picker on today's build, so the invitees must actually be set on the events)",
           "type": "llm_judge",
           "weight": 0.114754
         },
         {
-          "criterion": "Agent attempts to add 24-hour and 1-hour reminders on each of the 5 Dundies prep events if the HooliCalendar event editor exposes per-event reminders",
+          "criterion": "Agent adds 24-hour and 1-hour reminders on each of the 5 Dundies prep events (HooliCalendar exposes per-event reminders on today's build, so the reminders must actually be set)",
           "type": "llm_judge",
           "weight": 0.114754
         },
@@ -1221,32 +1221,27 @@
         {
           "criterion": "Agent pulls paired timestamps of incoming DMs and Michael's replies from HooliChat DMs to compute how fast he writes back",
           "type": "llm_judge",
-          "weight": 0.263253
+          "weight": 0.24
         },
         {
           "criterion": "Agent groups the reply latencies into the <5min, <1h, <1d, and >1d buckets requested in the write-back prompt and reports a count per bucket",
           "type": "llm_judge",
-          "weight": 0.263253
+          "weight": 0.24
         },
         {
           "criterion": "Agent calls out the mode bucket and characterizes Michael's response speed",
           "type": "llm_judge",
-          "weight": 0.210642
+          "weight": 0.16
         },
         {
           "criterion": "Agent states a fast-responder vs ghoster verdict in plain English based on which reply-latency bucket dominates",
           "type": "llm_judge",
-          "weight": 0.105221
+          "weight": 0.1
         },
         {
-          "criterion": "Agent derives the write-back latency buckets from HooliChat DM timestamps and shows the per-bucket reply counts instead of stating the fast-responder verdict with no supporting data",
+          "criterion": "Agent saves a LibreOffice Writer document containing a chart/visual of the reply-latency distribution across the <5min / <1h / <1d / >1d buckets, per the instruction to 'Return the distribution of my responses in a LibreOffice Writer Chart' (a text-only answer with no Writer document/chart does not satisfy this)",
           "type": "llm_judge",
-          "weight": 0.105221
-        },
-        {
-          "criterion": "Agent finishes the fast-vs-ghoster DM analysis and reports both the bucket counts and the final responder verdict",
-          "type": "llm_judge",
-          "weight": 0.05241
+          "weight": 0.26
         }
       ]
     }
@@ -1797,44 +1792,44 @@
       "type": "llm_judge",
       "rubrics": [
         {
-          "criterion": "Agent opens Kwik-E-Mart, selects Wegman's as the store for the Dundies catering bulk order (instruction explicitly specifies Wegman's), and views any existing shopping lists before building the new catering list",
+          "criterion": "Agent opens Kwik-E-Mart and selects Wegman's as the store for the Dundies catering bulk order (instruction explicitly specifies Wegman's); viewing existing shopping lists first is optional",
           "type": "llm_judge",
-          "weight": 0.12
+          "weight": 0.1
         },
         {
-          "criterion": "Agent creates or extends a Dundies Catering shopping list (or a 'Party Supplies' list) in Kwik-E-Mart for the catering items",
+          "criterion": "Agent optionally creates or extends a Dundies Catering shopping list (or a 'Party Supplies' list) in Kwik-E-Mart for the catering items — a saved named list is a bonus path, not required",
+          "type": "llm_judge",
+          "weight": 0.05
+        },
+        {
+          "criterion": "Agent adds 6+ catering item categories (drinks, chips, plates, plastic silverware, napkins, ice) with quantities scaled for 100 people, whether via a saved shopping list or by adding them directly to the cart",
+          "type": "llm_judge",
+          "weight": 0.2
+        },
+        {
+          "criterion": "Agent builds the Dundies catering basket in the Kwik-E-Mart cart — either by moving a saved list's contents into the cart or by adding the catering items to the cart directly",
           "type": "llm_judge",
           "weight": 0.15
         },
         {
-          "criterion": "Agent adds 6+ Kwik-E-Mart shopping list categories (drinks, chips, plates, plastic silverware, napkins, ice) with quantities scaled for 100 people",
-          "type": "llm_judge",
-          "weight": 0.18
-        },
-        {
-          "criterion": "Agent moves the Dundies Catering Kwik-E-Mart shopping list contents into the cart",
-          "type": "llm_judge",
-          "weight": 0.12
-        },
-        {
           "criterion": "Agent confirms delivery address is 1725 Slough Ave (Michael's home address) at Kwik-E-Mart checkout",
           "type": "llm_judge",
-          "weight": 0.12
+          "weight": 0.13
         },
         {
           "criterion": "Agent picks a delivery window at least 2 hours wide at Kwik-E-Mart checkout so Michael is not waiting all afternoon",
           "type": "llm_judge",
-          "weight": 0.11
+          "weight": 0.12
         },
         {
           "criterion": "Agent places the Kwik-E-Mart Dundies catering order and confirms the order total and delivery window persist in order history",
           "type": "llm_judge",
-          "weight": 0.11
+          "weight": 0.2
         },
         {
-          "criterion": "Agent verifies the Dundies Catering shopping list persists and displays in Kwik-E-Mart shopping_lists after checkout",
+          "criterion": "Agent verifies the Dundies Catering shopping list persists and displays in Kwik-E-Mart shopping_lists after checkout — a bonus check only, not required if the basket was built directly in the cart",
           "type": "llm_judge",
-          "weight": 0.09
+          "weight": 0.05
         }
       ]
     }
@@ -1852,7 +1847,7 @@
       "type": "llm_judge",
       "rubrics": [
         {
-          "criterion": "Agent identifies Michael's favorite Kwik-E-Mart grocery store as the top-by-order-count store from live order history (/api/orders), naming whichever store has the plurality of orders",
+          "criterion": "Agent explicitly names Michael's favorite Kwik-E-Mart grocery store — the plurality store, Wegmans (top by order count in the live /api/orders history) — in its written output or the LibreOffice Writer deliverable; merely opening or scrolling the orders page without naming the store does not satisfy this",
           "type": "llm_judge",
           "weight": 0.2632
         },
@@ -1902,12 +1897,12 @@
           "weight": 0.2
         },
         {
-          "criterion": "Agent copies the line items from that Price Chopper order into the new reorder cart at Price Chopper (not Wegmans or another store)",
+          "criterion": "Agent copies the line items of the most-recent Price Chopper order as displayed in the Kwik-E-Mart order-detail UI (the displayed order contents are the source of truth the agent works from) into the new reorder cart at Price Chopper (not Wegmans or another store)",
           "type": "llm_judge",
           "weight": 0.2
         },
         {
-          "criterion": "Agent adds oat milk to the cart if it was not already in the Price Chopper reorder, and adds eggs if they were not already in the Price Chopper reorder, per Michael's explicit request",
+          "criterion": "Agent ensures oat milk and eggs are present in the final Price Chopper cart, judged against the order contents as displayed in the Kwik-E-Mart order-detail UI: it adds an oat-milk item if the displayed reorder does not already contain one, and adds eggs if the displayed reorder does not already contain eggs, per Michael's explicit request",
           "type": "llm_judge",
           "weight": 0.2
         },
@@ -1984,37 +1979,32 @@
         {
           "criterion": "Agent reads ~/Documents/Dundies_2026_Categories.txt to retrieve this year's Dundies category names for the invitation",
           "type": "llm_judge",
-          "weight": 0.132075
+          "weight": 0.152174
         },
         {
           "criterion": "Agent opens LibreOffice Writer and creates a new document for the Dundies 2026 invitation",
           "type": "llm_judge",
-          "weight": 0.132075
+          "weight": 0.152174
         },
         {
-          "criterion": "Agent writes a big bold centered top-of-page title reading 'THE DUNDIES 2026' in the Writer invitation document",
+          "criterion": "Agent writes a big bold centered top-of-page title referencing the Dundies 2026 (e.g. 'THE DUNDIES 2026' — any clear Dundies 2026 title satisfies) in the Writer invitation document",
           "type": "llm_judge",
-          "weight": 0.150943
-        },
-        {
-          "criterion": "Agent writes a short Dundies 2026 invitation intro paragraph below the title in the Writer document",
-          "type": "llm_judge",
-          "weight": 0.132075
+          "weight": 0.173913
         },
         {
           "criterion": "Agent inserts a bulleted list of this year's Dundies categories pulled from Dundies_2026_Categories.txt into the Writer invitation document",
           "type": "llm_judge",
-          "weight": 0.150943
+          "weight": 0.173913
         },
         {
           "criterion": "Agent adds a signature block reading 'Michael Scott, World's Best Boss' at the bottom of the Writer invitation document",
           "type": "llm_judge",
-          "weight": 0.150943
+          "weight": 0.173913
         },
         {
-          "criterion": "Agent saves the Dundies 2026 invitation as ~/Desktop/dundies_invite.odt fitting on a single page",
+          "criterion": "Agent saves the Dundies 2026 invitation to the Desktop as an .odt fitting on a single page (e.g. ~/Desktop/dundies_invite.odt — any clearly-named Desktop .odt satisfies)",
           "type": "llm_judge",
-          "weight": 0.150943
+          "weight": 0.173913
         }
       ]
     }
@@ -2483,32 +2473,27 @@
       "type": "llm_judge",
       "rubrics": [
         {
-          "criterion": "Agent locates Michael's actual sent mail — either by recognizing the user's Maildir/new/ hint is wrong and walking ~/Maildir/.Sent/ on the filesystem, OR by listing the Sent folder via the HooliMail app/API — and notes that Maildir/new/ does not in fact contain sent mail",
+          "criterion": "Agent locates Michael's actual sent mail by recognizing the user's Maildir/new/ hint is wrong and reading ~/Maildir/.Sent/ (the authoritative sent-mail source), noting that Maildir/new/ does not in fact contain sent mail",
           "type": "llm_judge",
-          "weight": 0.1875
+          "weight": 0.25
         },
         {
-          "criterion": "Agent reports top 5 recipients of Michael's sent mail, ranked by frequency, with correct recipient names drawn from the sent-mail data (whether from Maildir or HooliMail API)",
+          "criterion": "Agent reports the top 5 recipients of Michael's sent mail, ranked by frequency, drawn from the authoritative ~/Maildir/.Sent/ source (not the HooliMail DB, whose from-michael counts diverge)",
           "type": "llm_judge",
-          "weight": 0.1875
+          "weight": 0.25
         },
         {
-          "criterion": "Agent reports top 5 recurring sent thread subjects",
+          "criterion": "Agent reports the top 5 recurring sent thread subjects from ~/Maildir/.Sent/",
           "type": "llm_judge",
-          "weight": 0.1875
+          "weight": 0.25
         },
         {
-          "criterion": "Agent reports the total sent mail count from michael.scott (citing the actual number found, via Maildir/.Sent/ or via HooliMail API Sent listing) over the past year",
-          "type": "llm_judge",
-          "weight": 0.1875
-        },
-        {
-          "criterion": "Agent delivers two ranked HooliMail sent lists: top 5 recipients and top 5 recurring thread subjects over the past year",
+          "criterion": "Agent delivers two ranked sent lists from ~/Maildir/.Sent/: top 5 recipients and top 5 recurring thread subjects over the past year",
           "type": "llm_judge",
           "weight": 0.125
         },
         {
-          "criterion": "Agent completes the top 5 recipients ranking and top 5 recurring sent thread subjects ranking from HooliMail end-to-end",
+          "criterion": "Agent completes the top 5 recipients ranking and top 5 recurring sent thread subjects ranking from the ~/Maildir/.Sent/ source end-to-end",
           "type": "llm_judge",
           "weight": 0.125
         }
@@ -2594,19 +2579,14 @@
           "weight": 0.15
         },
         {
-          "criterion": "Agent produces a Thursday obligations digest",
-          "type": "llm_judge",
-          "weight": 0.15
-        },
-        {
           "criterion": "Agent delivers a Thursday obligations digest that lists every current-quarter Thursday event (recurring or one-off with improv) with date and time",
           "type": "llm_judge",
-          "weight": 0.2
+          "weight": 0.25
         },
         {
-          "criterion": "Agent covers Thursdays in the current quarter and lists each recurring or notable obligation (including any Thursday improv sessions)",
+          "criterion": "Agent saves the Thursday obligations summary as a LibreOffice Writer document, per the instruction to 'Type up a summary of my Thursdays on a LibreOffice Writer Document' (plain chat text without a saved Writer document does not satisfy this)",
           "type": "llm_judge",
-          "weight": 0.1
+          "weight": 0.2
         }
       ]
     }
@@ -2874,7 +2854,7 @@
           "weight": 0.133332
         },
         {
-          "criterion": "Agent computes the remaining Jamaica and Barbados trip cost still owed after hotel and flight charges already on the credit card",
+          "criterion": "Agent computes how much of the Jamaica and Barbados trip cost is already paid versus still owed, accounting for wherever the hotel and flight charges actually posted (checking or credit card)",
           "type": "llm_judge",
           "weight": 0.122222
         },
@@ -2884,7 +2864,7 @@
           "weight": 0.133332
         },
         {
-          "criterion": "Agent states the contradiction between booking the Jamaica and Barbados trips about four weeks apart and Michael's actual credit card balance position",
+          "criterion": "Agent states honestly whether Michael's actual credit card position creates any max-out risk given the two trips, correctly noting if the charges already posted to checking so there is no credit-card max-out tension",
           "type": "llm_judge",
           "weight": 0.133332
         },
@@ -2978,22 +2958,22 @@
           "weight": 0.155552
         },
         {
-          "criterion": "Agent searches Gringotts for donation transactions over the past year",
+          "criterion": "Agent searches Gringotts for donation transactions over the past year (the last-full-calendar-year window matching the tax return's claim period) from Gringotts transaction history OR the seeded donation records — if the live ledger's charity rows are unavailable, reconciling SpeedTax's $950 claim against whatever donation evidence is locatable (statements, receipts, mail) suffices",
           "type": "llm_judge",
           "weight": 0.155556
         },
         {
-          "criterion": "Agent sums actual donation transactions found",
+          "criterion": "Agent sums actual donation transactions found from Gringotts transaction history OR the seeded donation records — if the live ledger's charity rows are unavailable, reconciling SpeedTax's $950 claim against whatever donation evidence is locatable (statements, receipts, mail) suffices",
           "type": "llm_judge",
           "weight": 0.155556
         },
         {
-          "criterion": "Agent optionally checks HooliMail for charitable donation receipts; absence of such emails is acceptable since the primary cross-check uses Gringotts transactions",
+          "criterion": "Agent checks HooliMail for charitable donation receipts and finds and cites the HooliMail donation receipt from The Scranton Mission ($175, dated 2025-03-14; id varies per bake), factoring it into the reconciled donation total — this receipt exists in the seed, so reporting that no receipts were found does not earn credit",
           "type": "llm_judge",
           "weight": 0.155556
         },
         {
-          "criterion": "Agent explicitly flags whether the deduction matches the evidence",
+          "criterion": "Agent explicitly flags whether the SpeedTax charitable-deduction claim holds up against the reconciled donation evidence (Gringotts card donations over the last-full-calendar-year window plus the $175 Scranton Mission receipt), naming the reconciled donation total and the window used",
           "type": "llm_judge",
           "weight": 0.155556
         },
@@ -3025,12 +3005,12 @@
       "type": "llm_judge",
       "rubrics": [
         {
-          "criterion": "Agent searches HooliShop order history for any prior trophy or award-style purchase, reporting either a hit or a clean-absence finding",
+          "criterion": "Agent searches HooliShop order history and surfaces the existing prior trophy/award-style purchases (there are four seeded Dundie-trophy orders), citing the actual orders rather than reporting a clean absence",
           "type": "llm_judge",
           "weight": 0.133336
         },
         {
-          "criterion": "Agent checks HooliShop for any current-year Dundie trophy order and reports whether one already exists",
+          "criterion": "Agent identifies the current-year bulk Dundie trophy order in HooliShop (qty 15, ~$763, spring 2026; order number varies per bake) and reports that a prior order already exists",
           "type": "llm_judge",
           "weight": 0.133332
         },
@@ -3040,7 +3020,7 @@
           "weight": 0.133332
         },
         {
-          "criterion": "Agent extracts the trophies-reusable question from the thread",
+          "criterion": "Agent opens the current-year Dundies planning thread and extracts the trophy-ordering plan it describes (the thread plans ordering new trophies; the 'buy twice / reuse' framing comes from Michael's instruction, not from a question asked in the thread)",
           "type": "llm_judge",
           "weight": 0.122222
         },
@@ -3261,7 +3241,7 @@
           "weight": 0.12
         },
         {
-          "criterion": "Agent identifies any calendar event (meetings, improv, anything) scheduled during the airport-arrival window before the Jamaica flight",
+          "criterion": "Agent determines whether any calendar event (meetings, improv, anything) is scheduled during the airport-arrival window before the Jamaica flight, correctly reporting that no pre-flight morning event exists if there is none",
           "type": "llm_judge",
           "weight": 0.12
         },
@@ -3308,7 +3288,7 @@
       "type": "llm_judge",
       "rubrics": [
         {
-          "criterion": "Agent identifies the largest year-to-date Gringotts expense with date and amount",
+          "criterion": "Agent identifies the largest year-to-date Gringotts discretionary expense with date and amount, treating credit-card payments and account transfers (e.g. the -$3427.97 Gringotts CC payment) as non-expenses; any top-tier merchant/discretionary debit (e.g. rent -$2800, or another large merchant charge) is an acceptable pick",
           "type": "llm_judge",
           "weight": 0.155552
         },
@@ -3529,17 +3509,17 @@
           "weight": 0.10628
         },
         {
-          "criterion": "Agent lists SpeedTax deductions claimed on the most-recent in-progress return that would cover the rejected-expense period",
+          "criterion": "Agent reviews SpeedTax deductions claimed on the most-recent in-progress return and determines whether any could cover the rejected-expense period, correctly noting if the only in-progress return (TY2025) predates the Q1-2026 rejected charges so none covers them",
           "type": "llm_judge",
           "weight": 0.115941
         },
         {
-          "criterion": "Agent identifies overlap between rejected items and SpeedTax deductions (or explicitly confirms no explicit deduction-field overlap and surfaces the George Foreman reference in the return's deduction_notes as the one edge case)",
+          "criterion": "Agent identifies overlap between rejected items and SpeedTax deductions (or explicitly confirms no explicit deduction-field overlap; if the return's deduction notes mention the George Foreman grill, surface it, otherwise reporting that no double-dip entry exists in the return data is correct)",
           "type": "llm_judge",
           "weight": 0.115941
         },
         {
-          "criterion": "Agent recommends removing the overlap items from the return",
+          "criterion": "Agent recommends removing any overlapping items from the return, or confirms there are none to remove if no field-level overlap exists",
           "type": "llm_judge",
           "weight": 0.10628
         },
@@ -3554,7 +3534,7 @@
           "weight": 0.096621
         },
         {
-          "criterion": "Agent opens the Chili's receipt file in ~/Downloads/ and explicitly cross-checks that line against the deduction categories on the most-recent SpeedTax return covering the receipt date",
+          "criterion": "Agent opens the Chili's receipt file in ~/Downloads/ and cross-checks that line against the deduction categories on the most-recent SpeedTax return, stating whether that return's period actually covers the receipt date",
           "type": "llm_judge",
           "weight": 0.130435
         }
@@ -3658,7 +3638,7 @@
           "weight": 0.219299
         },
         {
-          "criterion": "Agent reviews the Cheskepdia Barbados booking confirmation email in HooliMail for any grace-period or alternate-card hold policy hints; if no dedicated grace-period policy email exists, explicitly notes the absence before ranking the rescue options",
+          "criterion": "Agent locates and cites the Cheskepdia policy emails in HooliMail — the CHESK-POL-2 'Alternate card on file: hold policy' ($200 alternate-card hold on decline) and the CHESK-POL-1 updated cancellation grace-period email — and factors them in before ranking the rescue options (these emails exist in the seed; reporting that no such policy email exists does not earn credit)",
           "type": "llm_judge",
           "weight": 0.166668
         }
@@ -3687,7 +3667,7 @@
           "weight": 0.200001
         },
         {
-          "criterion": "Uses the most recent HooliShop Dundie trophy order as baseline for trophy cost scaling (agent reads the actual order total from HooliShop rather than hardcoding a number)",
+          "criterion": "Uses last year's bulk HooliShop Dundie trophy order (the ~qty-12 bulk order, per the instruction's 'last year's trophy order' wording — not the most-recent single-trophy order) as baseline for trophy cost scaling (agent reads the actual order total from HooliShop rather than hardcoding a number)",
           "type": "llm_judge",
           "weight": 0.150001
         },
@@ -3827,7 +3807,7 @@
           "weight": 0.166667
         },
         {
-          "criterion": "Agent reads the actual count of upcoming Dinoco flights and computes total first-class upgrade cost using Michael's stated $600-per-flight assumption (rubric accepts either the $600 ballpark or the actual Dinoco upgrade fee if shown)",
+          "criterion": "Agent reads the actual count of upcoming Dinoco flights — excluding the synthetic DN-CKW test flights (DN-CKW001..004), leaving 3 real trips / 6 legs (Jamaica, PDX, BCN) — and computes total first-class upgrade cost using Michael's stated $600-per-flight assumption (rubric accepts either the $600 ballpark or the actual Dinoco upgrade fee if shown)",
           "type": "llm_judge",
           "weight": 0.125022
         },
@@ -3837,12 +3817,12 @@
           "weight": 0.208312
         },
         {
-          "criterion": "Agent lists the upcoming Dinoco flights by confirmation number + duration when evaluating which upgrades are worth it",
+          "criterion": "Agent lists the upcoming Dinoco flights (the 3 real trips / 6 legs — Jamaica, PDX, BCN — excluding the synthetic DN-CKW test flights) by confirmation number + duration when evaluating which upgrades are worth it",
           "type": "llm_judge",
           "weight": 0.166667
         },
         {
-          "criterion": "Agent differentiates upgrade priority across the upcoming Dinoco flights with a defensible criterion (e.g., longest-duration as highest-value and shortest as least-value on diminishing returns, OR if the upcoming flights are all comparable long-haul routes, prioritizing by travel companion or time-of-day factors) instead of upgrading every flight blindly",
+          "criterion": "Agent differentiates upgrade priority across the upcoming Dinoco flights (the real Jamaica/PDX/BCN trips, excluding synthetic DN-CKW test flights) with a defensible criterion (e.g., longest-duration as highest-value and shortest as least-value on diminishing returns, OR if the upcoming flights are all comparable long-haul routes, prioritizing by travel companion or time-of-day factors) instead of upgrading every flight blindly",
           "type": "llm_judge",
           "weight": 0.166667
         },
@@ -3880,12 +3860,12 @@
           "weight": 0.219299
         },
         {
-          "criterion": "Agent computes the Threat Level Midnight sequel shortfall against the budget target stated in Michael's instruction (Michael says 'five grand' / $5000) — summed buckets vs that target — and surfaces it to the user",
+          "criterion": "Agent computes the difference between the 3 summed self-funding buckets and the $5000 budget target stated in Michael's instruction — i.e. the surplus or shortfall — and surfaces it to the user",
           "type": "llm_judge",
           "weight": 0.175438
         },
         {
-          "criterion": "Proposes either a smaller budget or selling BatBucks positions at cost basis to close the gap",
+          "criterion": "If the buckets fall short of the $5000 target, proposes either a smaller budget or selling BatBucks positions at cost basis to close the gap; if the buckets already cover the target, confirms the sequel is fully self-fundable with no cuts needed",
           "type": "llm_judge",
           "weight": 0.175438
         },
@@ -3972,12 +3952,12 @@
       "type": "llm_judge",
       "rubrics": [
         {
-          "criterion": "Agent saves a PNG at ~/Desktop/gme_pnl.png that displays the BatBucks GME 3-month position chart as the main subject",
+          "criterion": "Agent produces a screenshot/image deliverable showing the BatBucks GME 3-month position chart as the main subject, saved as a clearly-named file (e.g. ~/Desktop/gme_pnl.png — any clearly-named screenshot file, or the chart embedded in the Writer report, satisfies this)",
           "type": "llm_judge",
           "weight": 0.263067
         },
         {
-          "criterion": "Agent writes ~/Desktop/gme_caption.txt containing at least 2-3 sentences of analysis describing the GME chart",
+          "criterion": "Agent provides at least 2-3 sentences of analysis describing the GME chart in a clearly-named deliverable (e.g. ~/Desktop/gme_caption.txt, or within the Writer report — any clearly-named analysis file/report satisfies this)",
           "type": "llm_judge",
           "weight": 0.175467
         },
@@ -4059,7 +4039,7 @@
       "type": "llm_judge",
       "rubrics": [
         {
-          "criterion": "Agent opens Gringotts and browses transactions from the most recent complete calendar quarter (three most recent months) to source the Calc spreadsheet data",
+          "criterion": "Agent opens Gringotts and browses transactions from the most recent complete calendar quarter (the most recent finished Jan-Mar / Apr-Jun / Jul-Sep / Oct-Dec quarter — Q2 Apr-Jun as of the task date) to source the Calc spreadsheet data",
           "type": "llm_judge",
           "weight": 0.166667
         },
@@ -4074,7 +4054,7 @@
           "weight": 0.166667
         },
         {
-          "criterion": "Agent inserts a bar chart of most-recent-quarter category totals into the LibreOffice Calc sheet at ~/Desktop/michael_spend_quarterly.ods",
+          "criterion": "Agent inserts a bar chart of most-recent-quarter category totals into the LibreOffice Calc sheet saved to the Desktop (any Desktop .ods filename is acceptable; michael_spend_quarterly.ods is an example, not a requirement)",
           "type": "llm_judge",
           "weight": 0.166667
         },
@@ -4084,7 +4064,7 @@
           "weight": 0.166667
         },
         {
-          "criterion": "Agent saves the Calc spreadsheet in .ods format at ~/Desktop/michael_spend_quarterly.ods",
+          "criterion": "Agent saves the Calc spreadsheet in .ods format to the Desktop (any Desktop .ods filename is acceptable, e.g. michael_spend_quarterly.ods)",
           "type": "llm_judge",
           "weight": 0.166667
         }
@@ -4172,7 +4152,7 @@
           "weight": 0.190909
         },
         {
-          "criterion": "Agent saves ~/Desktop/jamaica_booking.png showing the Cheskepdia Sandals Montego Bay booking page with the hotel total visible",
+          "criterion": "Agent saves a full-page PNG screenshot to the Desktop showing the Cheskepdia Sandals Montego Bay booking page with the hotel total visible (any Desktop .png filename is acceptable; jamaica_booking.png is an example, not a requirement)",
           "type": "llm_judge",
           "weight": 0.236364
         }
@@ -4250,22 +4230,17 @@
         {
           "criterion": "Agent identifies and lists the 5 largest credit card charges of the year from the live Gringotts card transaction list, ranked by dollar amount",
           "type": "llm_judge",
-          "weight": 0.3
+          "weight": 0.392308
         },
         {
           "criterion": "Agent reports the payee/merchant name and amount for each of the 5 biggest charges (not fabricated — sourced from the live card view)",
           "type": "llm_judge",
-          "weight": 0.25
-        },
-        {
-          "criterion": "Agent captures a screenshot showing the Gringotts credit card transaction list with the top charges visible and saves it to ~/Desktop/largest_txn.png",
-          "type": "llm_judge",
-          "weight": 0.2
+          "weight": 0.326923
         },
         {
           "criterion": "Agent completes the full top-5 biggest charges retrieval (all 5 named) before ending the task",
           "type": "llm_judge",
-          "weight": 0.1
+          "weight": 0.130769
         }
       ]
     }
@@ -4381,12 +4356,12 @@
           "weight": 0.2068
         },
         {
-          "criterion": "Post was NOT actually published (LOCKEDIN_POST_COUNT should be unchanged)",
+          "criterion": "Agent typed the 'Somehow I Manage' draft into the Start a post composer AND stopped before publishing (the composer holds the drafted body and LOCKEDIN_POST_COUNT is unchanged — an empty composer with no draft, or an actually-published post, does not earn credit)",
           "type": "llm_judge",
           "weight": 0.2068
         },
         {
-          "criterion": "File saved at ~/Desktop/lockedin_preview.png",
+          "criterion": "Optionally, a preview image of the composer is saved to the Desktop (e.g. ~/Desktop/lockedin_preview.png); since the instruction only asks to view the draft in the composer, an on-screen composer view with no saved PNG also satisfies this",
           "type": "llm_judge",
           "weight": 0.082657
         },
@@ -4422,7 +4397,7 @@
       "type": "llm_judge",
       "rubrics": [
         {
-          "criterion": "Agent attempts to schedule an outbound ride to AVP for the live Jamaica flight departure date, or notes that the departure date has already passed and proceeds with the return-leg booking",
+          "criterion": "Agent attempts to schedule an outbound ride to AVP for the live Jamaica flight departure date (the departure is in the future and schedulable — skipping the outbound leg on a claim that the date has already passed does not earn credit)",
           "type": "llm_judge",
           "weight": 0.151
         },
@@ -4457,7 +4432,7 @@
           "weight": 0.09
         },
         {
-          "criterion": "Agent confirms the outbound eTaxi booking from Slough Ave to AVP on the Jamaica departure day, or documents that the departure date has already passed and focuses on the return-leg booking",
+          "criterion": "Agent confirms the outbound eTaxi booking from Slough Ave to AVP on the Jamaica departure day (the departure date is in the future and must be booked, not skipped)",
           "type": "llm_judge",
           "weight": 0.09
         },
@@ -5048,46 +5023,40 @@
       "rubrics": [
         {
           "criterion": "Agent enumerated the 3 SprintBoard projects (Team Morale, Diversity Day, Movie Monday) and listed the open tasks in each",
-          "weight": 0.136388,
+          "weight": 0.15003,
           "type": "llm_judge"
         },
         {
           "criterion": "Agent read relevant project notes under ~/Documents (Team Morale / Diversity Day / Movie Monday project briefs, plus any Dundies context docs at ~/Documents root) before setting priorities",
-          "weight": 0.136388,
+          "weight": 0.15003,
           "type": "llm_judge"
         },
         {
           "criterion": "Agent assigns priorities, labels, and deadlines to open SprintBoard tasks across all three projects (Team Morale, Diversity Day, Movie Monday)",
-          "weight": 0.181851,
+          "weight": 0.200039,
           "type": "llm_judge"
         },
         {
           "criterion": "Agent sets priorities on every open SprintBoard task across Team Morale, Diversity Day, and Movie Monday",
-          "weight": 0.136388,
+          "weight": 0.15003,
           "type": "llm_judge"
         },
         {
           "criterion": "Agent cross-references assigned SprintBoard priorities against the project notes under ~/Documents so the priorities match the stated project scope",
-          "weight": 0.090926,
+          "weight": 0.100021,
           "type": "llm_judge"
         },
         {
           "criterion": "Agent posted HooliWork #general cross-project status",
-          "weight": 0.136388,
+          "weight": 0.15003,
           "type": "llm_judge"
         },
         {
-          "criterion": "Agent saved a cross-project summary file",
-          "weight": 0.090926,
-          "type": "llm_judge"
-        },
-        {
-          "criterion": "Agent completed the SprintBoard three-project sync subtasks end-to-end: enumerate, read project notes, assign owners, set priorities, HooliWork post, Documents summary",
-          "weight": 0.090744,
+          "criterion": "Agent completed the SprintBoard three-project sync subtasks end-to-end: enumerate open tasks, read project notes, assign priorities/labels/deadlines, and post the HooliWork #general status update",
+          "weight": 0.09982,
           "type": "llm_judge"
         }
-      ],
-      "rubric_rule": "All-or-nothing rubric enforcement: missing any subtask caps rubric score at 60%."
+      ]
     }
   },
   {
@@ -5482,7 +5451,7 @@
       "type": "llm_judge",
       "rubrics": [
         {
-          "criterion": "Agent cited at least 7 of 8 headline numbers accurately",
+          "criterion": "Agent cites at least 7 of these 8 headline numbers with approximately-correct values read from the live apps: (1) trailing-12-month total spend (Gringotts), (2) HooliShop order count, (3) HangryDash order count, (4) Kwik-E-Mart order count, (5) investment/at-cost portfolio total (BatBucks), (6) prediction-bet P&L (OddsMarket), (7) SprintBoard open-task and team-channel activity (SprintBoard + HooliWork), and (8) LockedIn activity plus most-recent SpeedTax return status — each value must approximately match what the live app shows (grading is against the live apps, not fixed numbers)",
           "weight": 0.176394,
           "type": "llm_judge"
         },
@@ -5734,7 +5703,7 @@
           "weight": 0.25
         },
         {
-          "criterion": "Agent searches HooliMail for any Sandals Jamaica reservation confirmation email (if no such email exists, agent says so rather than fabricating)",
+          "criterion": "Agent finds and cites the Sandals Jamaica reservation confirmation email in HooliMail (mail SM-88431, which exists in the seed) as a corroborating copy of the confirmation number — reporting that no such email exists does not earn credit",
           "type": "llm_judge",
           "weight": 0.25
         },
@@ -5971,22 +5940,17 @@
         {
           "criterion": "Agent opens the team_morale_initiative_q2 doc and uses it to summarize the sign-off ask",
           "type": "llm_judge",
-          "weight": 0.2778
+          "weight": 0.42
         },
         {
-          "criterion": "Agent sends the HooliMail message to toby.flenderson@dundermifflin.com with a subject line referencing the Q2 Team Morale Initiative HR sign-off ask",
+          "criterion": "Agent sends a new outbound HooliMail from michael.scott@dundermifflin.com to toby.flenderson@dundermifflin.com requesting Q2 Team Morale Initiative HR sign-off, with a subject line referencing the Q2 Team Morale Initiative",
           "type": "llm_judge",
-          "weight": 0.2778
+          "weight": 0.4
         },
         {
           "criterion": "Agent writes the Toby sign-off email in a short workplace tone without personal hostility or jabs at Toby",
           "type": "llm_judge",
-          "weight": 0.1668
-        },
-        {
-          "criterion": "Agent sends a new outbound HooliMail from michael.scott@dundermifflin.com to toby.flenderson@dundermifflin.com requesting Q2 Team Morale sign-off",
-          "type": "llm_judge",
-          "weight": 0.2776
+          "weight": 0.18
         }
       ]
     }
@@ -6315,7 +6279,7 @@
           "weight": 0.256462
         },
         {
-          "criterion": "Agent places zero new trades during the task — open-positions list and account balance are unchanged from the start of the session",
+          "criterion": "Agent completes the 3 watchlist adds without placing any new trades — the 3 chosen markets are added to the OddsMarket watchlist AND the open-positions list and account balance are unchanged from the start of the session (a no-op that places no trades but also adds nothing to the watchlist does not earn credit)",
           "type": "llm_judge",
           "weight": 0.205077
         }
@@ -6444,12 +6408,12 @@
       "type": "llm_judge",
       "rubrics": [
         {
-          "criterion": "Agent sends a new outbound reply mentioning Cooper's Seafood House from michael.scott@dundermifflin.com to every Dundies planning email it can find in the inbox (up to 5; whatever count exists is the correct answer)",
+          "criterion": "Agent replies with a Cooper's Seafood House pitch (a new outbound reply from michael.scott@dundermifflin.com) to each of the 5 most-recent human Dundies-planning emails in the inbox, sent by Pam Beesly, Jim Halpert, Kevin Malone, Holly Flax, and Dwight Schrute (exact ids vary per bake), excluding automated SprintBoard 'Dundies' notifications and Michael's own self-sent mail; a reply is required to each of the 5 available",
           "type": "llm_judge",
           "weight": 0.329642
         },
         {
-          "criterion": "Agent addresses each Cooper's Seafood House pitch reply to the actual sender of the planning thread it is replying to (different recipients per thread; if only 2 Dundies threads exist, 2 distinct recipients is the correct outcome)",
+          "criterion": "Agent addresses each Cooper's Seafood House pitch reply to the actual sender of the planning email it is replying to (Pam, Jim, Kevin, Holly, and Dwight — 5 distinct recipients across the 5 human planning emails)",
           "type": "llm_judge",
           "weight": 0.219659
         },
@@ -6481,9 +6445,14 @@
       "type": "llm_judge",
       "rubrics": [
         {
-          "criterion": "Agent verifies the Scranton Improv Academy vendor in Gringotts before composing, and reads ~/Downloads/Improv_Class_Certificate.txt (the canonical seeded source for the academy's contact email) to look up the recipient",
+          "criterion": "Agent verifies the Scranton Improv Academy vendor by surfacing a recent Gringotts charge to the academy before composing the email",
           "type": "llm_judge",
-          "weight": 0.2352
+          "weight": 0.1176
+        },
+        {
+          "criterion": "Agent actually opens ~/Downloads/Improv_Class_Certificate.txt (the canonical seeded source) and uses/quotes the academy contact email it contains to address the message — merely surfacing the file in a picker or Open dialog without reading its contents does not satisfy this",
+          "type": "llm_judge",
+          "weight": 0.1176
         },
         {
           "criterion": "Email references the Jamaica trip as the reason for needing a makeup class, with a date window tied to the trip the agent establishes",
@@ -6835,7 +6804,7 @@
       "type": "llm_judge",
       "rubrics": [
         {
-          "criterion": "Agent opens the Jan rejection email thread in HooliMail and extracts the specific rejected line items with reasons",
+          "criterion": "Agent opens Jan's latest expense-report rejection thread in HooliMail — the Q2 thread (anchored by the George Foreman / Chili's / Karaoke / Sandals gift-card / Improv line items), which is the 'latest' report, not the older Q1 thread — and extracts the specific rejected line items with reasons",
           "type": "llm_judge",
           "weight": 0.11801
         },
@@ -6860,7 +6829,7 @@
           "weight": 0.145243
         },
         {
-          "criterion": "Agent saves the resubmission to ~/Documents/Q1_expense_resubmit.ods",
+          "criterion": "Agent saves the resubmission as a LibreOffice Calc .ods in ~/Documents/ (the instruction names Q1_expense_resubmit.ods, but since the latest rejected report is the Q2 thread, any reasonable ~/Documents/*_expense_resubmit.ods filename covering the Q2 line items is acceptable)",
           "type": "llm_judge",
           "weight": 0.090777
         },
@@ -8158,17 +8127,32 @@
       "type": "llm_judge",
       "rubrics": [
         {
-          "criterion": "Agent confirms working capital from BatBucks (cash + at-cost portfolio), pulls OddsMarket sentiment relevant to regional paper distributors (or notes none exist), AND checks SpeedTax to call out any 1099-side-business tax implications alongside the Dunder Mifflin W-2",
+          "criterion": "Agent confirms working capital from BatBucks (cash + at-cost portfolio total)",
           "type": "llm_judge",
-          "weight": 0.1
+          "weight": 0.0333
         },
         {
-          "criterion": "Agent pulls LockedIn analytics / post engagement to gauge brand reach AND identifies 5 warm leads by name for consultancy outreach (plausible business-role profiles; explicit 'competing paper firm' tagging is not required)",
+          "criterion": "Agent pulls OddsMarket market sentiment relevant to regional paper distributors, or explicitly notes none exist",
           "type": "llm_judge",
-          "weight": 0.1
+          "weight": 0.0333
         },
         {
-          "criterion": "Agent drafts a 'free 30-minute consult' HooliMail outreach template (saved as draft, NOT broadcast)",
+          "criterion": "Agent checks SpeedTax and calls out any 1099-side-business tax implications alongside the Dunder Mifflin W-2",
+          "type": "llm_judge",
+          "weight": 0.0334
+        },
+        {
+          "criterion": "Agent pulls LockedIn analytics / post engagement to gauge brand reach",
+          "type": "llm_judge",
+          "weight": 0.05
+        },
+        {
+          "criterion": "Agent identifies 5 warm leads by name for consultancy outreach (plausible business-role profiles; explicit 'competing paper firm' tagging is not required)",
+          "type": "llm_judge",
+          "weight": 0.05
+        },
+        {
+          "criterion": "Agent drafts a 'free 30-minute consult' HooliMail outreach template (saved as a draft, NOT broadcast)",
           "type": "llm_judge",
           "weight": 0.1
         },
@@ -8178,14 +8162,24 @@
           "weight": 0.1
         },
         {
-          "criterion": "Agent plans travel for client trips: Dinoco for monthly day-trips to Philadelphia (PHL is a seeded AVP route) AND eTaxi for local Wilkes-Barre ground trips (~20-min drive from Scranton, not a Dinoco route) or for same-day airport transfers",
+          "criterion": "Agent plans Dinoco monthly day-trips to Philadelphia (PHL is a seeded AVP route) for client visits",
           "type": "llm_judge",
-          "weight": 0.1
+          "weight": 0.05
         },
         {
-          "criterion": "Agent pre-fills HooliShop for branded notebooks + pens AND schedules a HangryDash client-lunch order option",
+          "criterion": "Agent plans eTaxi for local Wilkes-Barre ground trips (~20-min drive from Scranton, not a Dinoco route) or for same-day airport transfers",
           "type": "llm_judge",
-          "weight": 0.1
+          "weight": 0.05
+        },
+        {
+          "criterion": "Agent pre-fills HooliShop for branded notebooks + pens (low budget)",
+          "type": "llm_judge",
+          "weight": 0.05
+        },
+        {
+          "criterion": "Agent schedules a HangryDash client-lunch order option for the first booked meeting",
+          "type": "llm_judge",
+          "weight": 0.05
         },
         {
           "criterion": "Agent reserves TableFind for a candidate-client discovery dinner",
@@ -8203,9 +8197,19 @@
           "weight": 0.1
         },
         {
-          "criterion": "Agent coordinates the soft-launch in HooliChat Finer Things Club AND HooliWork #general, saves the full go-to-market packet in LibreOffice under ~/Documents/Personal/sim_consulting/, AND posts the LockedIn 'Somehow I Manage Consulting now open' launch",
+          "criterion": "Agent coordinates the soft-launch in HooliChat Finer Things Club AND HooliWork #general",
           "type": "llm_judge",
-          "weight": 0.1
+          "weight": 0.0333
+        },
+        {
+          "criterion": "Agent saves the full go-to-market packet in LibreOffice under ~/Documents/Personal/sim_consulting/",
+          "type": "llm_judge",
+          "weight": 0.0333
+        },
+        {
+          "criterion": "Agent posts the LockedIn 'Somehow I Manage Consulting now open' launch",
+          "type": "llm_judge",
+          "weight": 0.0334
         }
       ]
     }
@@ -8441,12 +8445,12 @@
       "type": "llm_judge",
       "rubrics": [
         {
-          "criterion": "Agent identifies the top 3 OddsMarket open positions by share count (by sorting the live positions list — names will track whatever positions are seeded; if positions tie at the boundary, agent breaks the tie by higher cost basis or alphabetical ticker)",
+          "criterion": "Agent identifies the top 3 OddsMarket open positions by share count (by sorting the live positions list); at the #3 tie between GME and NBA (both 200 shares) the agent applies the instruction's mandated tiebreak — highest cost basis first — selecting NBA (cost basis ~$160) over GME (~$16)",
           "type": "llm_judge",
           "weight": 0.215
         },
         {
-          "criterion": "Agent adds the top 3 positions by share count to the OddsMarket watchlist (any reasonable tiebreak at the boundary is acceptable)",
+          "criterion": "Agent adds the top 3 positions by share count to the OddsMarket watchlist, with NBA (not GME) as the #3 pick per the instruction's highest-cost-basis-then-alphabetical tiebreak",
           "type": "llm_judge",
           "weight": 0.215
         },
@@ -9092,12 +9096,12 @@
       "type": "llm_judge",
       "rubrics": [
         {
-          "criterion": "Agent filters Gringotts to the seeded Scranton Improv class charges (outbound debits whose description matches either 'Scranton Improv Workshop' or 'SCRANTON IMPROV ACADEMY' case-insensitively) dated within the last full calendar year (excludes the year before and the current year); excludes any inbound teaching-income credits",
+          "criterion": "Agent filters Gringotts to the seeded Scranton Improv class charges (outbound debits whose description matches 'Scranton Improv Workshop', i.e. where Scranton Improv is the payee/merchant) dated within the last full calendar year (excludes the year before and the current year); excludes any inbound teaching-income credits AND excludes eTaxi/transportation debits where 'Scranton Improv' appears only as a venue address rather than the merchant",
           "type": "llm_judge",
           "weight": 0.2
         },
         {
-          "criterion": "Agent sums every seeded Scranton Improv outbound debit as it appears in the ledger in the last full calendar year (matching either 'Scranton Improv Workshop' or 'SCRANTON IMPROV ACADEMY' descriptions) to an annual total computed from the actual seeded ledger charges (not a fabricated estimate); excludes any inbound teaching-income credits such as 'Scranton Improv Academy - 1099-NEC payment' or 'VENMO SCRANTON IMPROV ACADEMY'",
+          "criterion": "Agent sums every seeded Scranton Improv outbound class debit as it appears in the ledger in the last full calendar year (matching 'Scranton Improv Workshop' where Scranton Improv is the payee/merchant) to an annual total computed from the actual seeded ledger charges (not a fabricated estimate); excludes any inbound teaching-income credits such as 'Scranton Improv Academy - 1099-NEC payment' or 'VENMO SCRANTON IMPROV ACADEMY', and excludes transportation/eTaxi debits where Scranton Improv is only the venue address, not the payee",
           "type": "llm_judge",
           "weight": 0.25
         },

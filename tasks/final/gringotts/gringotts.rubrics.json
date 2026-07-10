@@ -134,12 +134,12 @@
       "type": "llm_judge",
       "rubrics": [
         {
-          "criterion": "Agent filters Gringotts to the seeded Scranton Improv class charges (outbound debits whose description matches either 'Scranton Improv Workshop' or 'SCRANTON IMPROV ACADEMY' case-insensitively) dated within the last full calendar year (excludes the year before and the current year); excludes any inbound teaching-income credits",
+          "criterion": "Agent filters Gringotts to the seeded Scranton Improv class charges (outbound debits whose description matches 'Scranton Improv Workshop', i.e. where Scranton Improv is the payee/merchant) dated within the last full calendar year (excludes the year before and the current year); excludes any inbound teaching-income credits AND excludes eTaxi/transportation debits where 'Scranton Improv' appears only as a venue address rather than the merchant",
           "type": "llm_judge",
           "weight": 0.2
         },
         {
-          "criterion": "Agent sums every seeded Scranton Improv outbound debit as it appears in the ledger in the last full calendar year (matching either 'Scranton Improv Workshop' or 'SCRANTON IMPROV ACADEMY' descriptions) to an annual total computed from the actual seeded ledger charges (not a fabricated estimate); excludes any inbound teaching-income credits such as 'Scranton Improv Academy - 1099-NEC payment' or 'VENMO SCRANTON IMPROV ACADEMY'",
+          "criterion": "Agent sums every seeded Scranton Improv outbound class debit as it appears in the ledger in the last full calendar year (matching 'Scranton Improv Workshop' where Scranton Improv is the payee/merchant) to an annual total computed from the actual seeded ledger charges (not a fabricated estimate); excludes any inbound teaching-income credits such as 'Scranton Improv Academy - 1099-NEC payment' or 'VENMO SCRANTON IMPROV ACADEMY', and excludes transportation/eTaxi debits where Scranton Improv is only the venue address, not the payee",
           "type": "llm_judge",
           "weight": 0.25
         },

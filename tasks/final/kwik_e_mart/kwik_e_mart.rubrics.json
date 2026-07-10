@@ -90,44 +90,44 @@
       "type": "llm_judge",
       "rubrics": [
         {
-          "criterion": "Agent opens Kwik-E-Mart, selects Wegman's as the store for the Dundies catering bulk order (instruction explicitly specifies Wegman's), and views any existing shopping lists before building the new catering list",
+          "criterion": "Agent opens Kwik-E-Mart and selects Wegman's as the store for the Dundies catering bulk order (instruction explicitly specifies Wegman's); viewing existing shopping lists first is optional",
           "type": "llm_judge",
-          "weight": 0.12
+          "weight": 0.1
         },
         {
-          "criterion": "Agent creates or extends a Dundies Catering shopping list (or a 'Party Supplies' list) in Kwik-E-Mart for the catering items",
+          "criterion": "Agent optionally creates or extends a Dundies Catering shopping list (or a 'Party Supplies' list) in Kwik-E-Mart for the catering items — a saved named list is a bonus path, not required",
+          "type": "llm_judge",
+          "weight": 0.05
+        },
+        {
+          "criterion": "Agent adds 6+ catering item categories (drinks, chips, plates, plastic silverware, napkins, ice) with quantities scaled for 100 people, whether via a saved shopping list or by adding them directly to the cart",
+          "type": "llm_judge",
+          "weight": 0.2
+        },
+        {
+          "criterion": "Agent builds the Dundies catering basket in the Kwik-E-Mart cart — either by moving a saved list's contents into the cart or by adding the catering items to the cart directly",
           "type": "llm_judge",
           "weight": 0.15
         },
         {
-          "criterion": "Agent adds 6+ Kwik-E-Mart shopping list categories (drinks, chips, plates, plastic silverware, napkins, ice) with quantities scaled for 100 people",
-          "type": "llm_judge",
-          "weight": 0.18
-        },
-        {
-          "criterion": "Agent moves the Dundies Catering Kwik-E-Mart shopping list contents into the cart",
-          "type": "llm_judge",
-          "weight": 0.12
-        },
-        {
           "criterion": "Agent confirms delivery address is 1725 Slough Ave (Michael's home address) at Kwik-E-Mart checkout",
           "type": "llm_judge",
-          "weight": 0.12
+          "weight": 0.13
         },
         {
           "criterion": "Agent picks a delivery window at least 2 hours wide at Kwik-E-Mart checkout so Michael is not waiting all afternoon",
           "type": "llm_judge",
-          "weight": 0.11
+          "weight": 0.12
         },
         {
           "criterion": "Agent places the Kwik-E-Mart Dundies catering order and confirms the order total and delivery window persist in order history",
           "type": "llm_judge",
-          "weight": 0.11
+          "weight": 0.2
         },
         {
-          "criterion": "Agent verifies the Dundies Catering shopping list persists and displays in Kwik-E-Mart shopping_lists after checkout",
+          "criterion": "Agent verifies the Dundies Catering shopping list persists and displays in Kwik-E-Mart shopping_lists after checkout — a bonus check only, not required if the basket was built directly in the cart",
           "type": "llm_judge",
-          "weight": 0.09
+          "weight": 0.05
         }
       ]
     },
@@ -157,7 +157,7 @@
       "type": "llm_judge",
       "rubrics": [
         {
-          "criterion": "Agent identifies Michael's favorite Kwik-E-Mart grocery store as the top-by-order-count store from live order history (/api/orders), naming whichever store has the plurality of orders",
+          "criterion": "Agent explicitly names Michael's favorite Kwik-E-Mart grocery store — the plurality store, Wegmans (top by order count in the live /api/orders history) — in its written output or the LibreOffice Writer deliverable; merely opening or scrolling the orders page without naming the store does not satisfy this",
           "type": "llm_judge",
           "weight": 0.2632
         },
@@ -218,12 +218,12 @@
           "weight": 0.2
         },
         {
-          "criterion": "Agent copies the line items from that Price Chopper order into the new reorder cart at Price Chopper (not Wegmans or another store)",
+          "criterion": "Agent copies the line items of the most-recent Price Chopper order as displayed in the Kwik-E-Mart order-detail UI (the displayed order contents are the source of truth the agent works from) into the new reorder cart at Price Chopper (not Wegmans or another store)",
           "type": "llm_judge",
           "weight": 0.2
         },
         {
-          "criterion": "Agent adds oat milk to the cart if it was not already in the Price Chopper reorder, and adds eggs if they were not already in the Price Chopper reorder, per Michael's explicit request",
+          "criterion": "Agent ensures oat milk and eggs are present in the final Price Chopper cart, judged against the order contents as displayed in the Kwik-E-Mart order-detail UI: it adds an oat-milk item if the displayed reorder does not already contain one, and adds eggs if the displayed reorder does not already contain eggs, per Michael's explicit request",
           "type": "llm_judge",
           "weight": 0.2
         },

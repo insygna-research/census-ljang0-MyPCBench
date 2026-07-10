@@ -145,12 +145,12 @@
           "weight": 0.098361
         },
         {
-          "criterion": "Agent adds Pam, Dwight, Kevin, Jim, and Holly as attendees on each of the 5 Dundies prep events, or notes clearly that HooliCalendar's event editor does not expose an attendees picker and records the intended invitee list in the event body / description so Michael can follow up",
+          "criterion": "Agent adds Pam, Dwight, Kevin, Jim, and Holly as attendees on each of the 5 Dundies prep events (HooliCalendar's event editor exposes an attendees picker on today's build, so the invitees must actually be set on the events)",
           "type": "llm_judge",
           "weight": 0.114754
         },
         {
-          "criterion": "Agent attempts to add 24-hour and 1-hour reminders on each of the 5 Dundies prep events if the HooliCalendar event editor exposes per-event reminders",
+          "criterion": "Agent adds 24-hour and 1-hour reminders on each of the 5 Dundies prep events (HooliCalendar exposes per-event reminders on today's build, so the reminders must actually be set)",
           "type": "llm_judge",
           "weight": 0.114754
         },

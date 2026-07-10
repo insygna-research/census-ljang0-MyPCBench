@@ -195,12 +195,12 @@
       "type": "llm_judge",
       "rubrics": [
         {
-          "criterion": "Agent identifies the top 3 OddsMarket open positions by share count (by sorting the live positions list — names will track whatever positions are seeded; if positions tie at the boundary, agent breaks the tie by higher cost basis or alphabetical ticker)",
+          "criterion": "Agent identifies the top 3 OddsMarket open positions by share count (by sorting the live positions list); at the #3 tie between GME and NBA (both 200 shares) the agent applies the instruction's mandated tiebreak — highest cost basis first — selecting NBA (cost basis ~$160) over GME (~$16)",
           "type": "llm_judge",
           "weight": 0.215
         },
         {
-          "criterion": "Agent adds the top 3 positions by share count to the OddsMarket watchlist (any reasonable tiebreak at the boundary is acceptable)",
+          "criterion": "Agent adds the top 3 positions by share count to the OddsMarket watchlist, with NBA (not GME) as the #3 pick per the instruction's highest-cost-basis-then-alphabetical tiebreak",
           "type": "llm_judge",
           "weight": 0.215
         },

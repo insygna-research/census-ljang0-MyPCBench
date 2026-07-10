@@ -126,27 +126,27 @@
         {
           "criterion": "Agent locates Somehow_I_Manage_Chapter_1.txt in ~/Documents and reports its absolute path",
           "type": "llm_judge",
-          "weight": 0.2
+          "weight": 0.3
         },
         {
           "criterion": "Agent provides a faithful, coherent summary of Chapter 1's content in Michael's voice and tone",
           "type": "llm_judge",
-          "weight": 0.2
+          "weight": 0.3
         },
         {
           "criterion": "Agent writes two additional chapters (Chapter 2 and Chapter 3, or equivalent) that continue the 'Somehow I Manage' book in Michael Scott's boss-lore style",
           "type": "llm_judge",
-          "weight": 0.3
+          "weight": 0.2
         },
         {
           "criterion": "Agent opens or creates a LibreOffice Writer document (.odt or .docx) to write the two new chapter extensions",
           "type": "llm_judge",
-          "weight": 0.2
+          "weight": 0.133333
         },
         {
           "criterion": "Agent's chapter extensions maintain Michael's over-the-top, self-aggrandizing management-wisdom tone consistent with Chapter 1",
           "type": "llm_judge",
-          "weight": 0.1
+          "weight": 0.066667
         }
       ]
     },

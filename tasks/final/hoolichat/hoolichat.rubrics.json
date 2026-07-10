@@ -83,32 +83,27 @@
         {
           "criterion": "Agent pulls paired timestamps of incoming DMs and Michael's replies from HooliChat DMs to compute how fast he writes back",
           "type": "llm_judge",
-          "weight": 0.263253
+          "weight": 0.24
         },
         {
           "criterion": "Agent groups the reply latencies into the <5min, <1h, <1d, and >1d buckets requested in the write-back prompt and reports a count per bucket",
           "type": "llm_judge",
-          "weight": 0.263253
+          "weight": 0.24
         },
         {
           "criterion": "Agent calls out the mode bucket and characterizes Michael's response speed",
           "type": "llm_judge",
-          "weight": 0.210642
+          "weight": 0.16
         },
         {
           "criterion": "Agent states a fast-responder vs ghoster verdict in plain English based on which reply-latency bucket dominates",
           "type": "llm_judge",
-          "weight": 0.105221
+          "weight": 0.1
         },
         {
-          "criterion": "Agent derives the write-back latency buckets from HooliChat DM timestamps and shows the per-bucket reply counts instead of stating the fast-responder verdict with no supporting data",
+          "criterion": "Agent saves a LibreOffice Writer document containing a chart/visual of the reply-latency distribution across the <5min / <1h / <1d / >1d buckets, per the instruction to 'Return the distribution of my responses in a LibreOffice Writer Chart' (a text-only answer with no Writer document/chart does not satisfy this)",
           "type": "llm_judge",
-          "weight": 0.105221
-        },
-        {
-          "criterion": "Agent finishes the fast-vs-ghoster DM analysis and reports both the bucket counts and the final responder verdict",
-          "type": "llm_judge",
-          "weight": 0.05241
+          "weight": 0.26
         }
       ]
     },

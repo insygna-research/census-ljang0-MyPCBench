@@ -86,37 +86,32 @@
         {
           "criterion": "Agent reads ~/Documents/Dundies_2026_Categories.txt to retrieve this year's Dundies category names for the invitation",
           "type": "llm_judge",
-          "weight": 0.132075
+          "weight": 0.152174
         },
         {
           "criterion": "Agent opens LibreOffice Writer and creates a new document for the Dundies 2026 invitation",
           "type": "llm_judge",
-          "weight": 0.132075
+          "weight": 0.152174
         },
         {
-          "criterion": "Agent writes a big bold centered top-of-page title reading 'THE DUNDIES 2026' in the Writer invitation document",
+          "criterion": "Agent writes a big bold centered top-of-page title referencing the Dundies 2026 (e.g. 'THE DUNDIES 2026' — any clear Dundies 2026 title satisfies) in the Writer invitation document",
           "type": "llm_judge",
-          "weight": 0.150943
-        },
-        {
-          "criterion": "Agent writes a short Dundies 2026 invitation intro paragraph below the title in the Writer document",
-          "type": "llm_judge",
-          "weight": 0.132075
+          "weight": 0.173913
         },
         {
           "criterion": "Agent inserts a bulleted list of this year's Dundies categories pulled from Dundies_2026_Categories.txt into the Writer invitation document",
           "type": "llm_judge",
-          "weight": 0.150943
+          "weight": 0.173913
         },
         {
           "criterion": "Agent adds a signature block reading 'Michael Scott, World's Best Boss' at the bottom of the Writer invitation document",
           "type": "llm_judge",
-          "weight": 0.150943
+          "weight": 0.173913
         },
         {
-          "criterion": "Agent saves the Dundies 2026 invitation as ~/Desktop/dundies_invite.odt fitting on a single page",
+          "criterion": "Agent saves the Dundies 2026 invitation to the Desktop as an .odt fitting on a single page (e.g. ~/Desktop/dundies_invite.odt — any clearly-named Desktop .odt satisfies)",
           "type": "llm_judge",
-          "weight": 0.150943
+          "weight": 0.173913
         }
       ]
     },

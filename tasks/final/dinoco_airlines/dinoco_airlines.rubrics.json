@@ -90,7 +90,7 @@
           "weight": 0.3
         },
         {
-          "criterion": "Agent reports the count of completed Dinoco flights in the past 12 months and the total miles for that window (even 1-2 flights is a valid result)",
+          "criterion": "Agent reports the count of completed Dinoco flights in the past 12 months (reconciling to the ~6 completed flights seeded in the live flight history, not a partial 1-2 subset) and the total miles for that window",
           "type": "llm_judge",
           "weight": 0.15
         },
