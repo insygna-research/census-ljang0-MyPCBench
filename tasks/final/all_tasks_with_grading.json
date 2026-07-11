@@ -2442,12 +2442,12 @@
           "weight": 0.173334
         },
         {
-          "criterion": "Agent calculates the runway in months from the current credit card balance to the credit limit at the computed monthly burn rate",
+          "criterion": "Agent calculates the runway in months from the current credit card balance to the credit limit at the computed monthly burn rate — or, if the net trend is a paydown (payments exceed charges), explicitly states that the balance is moving away from the limit so no months-to-limit applies",
           "type": "llm_judge",
           "weight": 0.173334
         },
         {
-          "criterion": "Agent reports the credit card burn rate and months-to-limit as specific numbers and states whether BatBucks cash can cover the paydown",
+          "criterion": "Agent reports the credit card burn rate as a specific number and the months-to-limit as a specific number (or an explicit not-applicable when the computed burn rate is negative / a net paydown), and states whether BatBucks cash can cover the paydown",
           "type": "llm_judge",
           "weight": 0.16
         },
