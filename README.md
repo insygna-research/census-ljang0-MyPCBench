@@ -2,6 +2,8 @@
 
 **A benchmark for personally intelligent computer-use agents.**
 
+Project page: <https://mypcbench.pages.dev/> · Code: <https://github.com/ljang0/MyPCBench>
+
 ![MyPCBench overview](docs/assets/hero.png)
 
 > A reproducible Linux-desktop benchmark seeded end-to-end from one canonical
@@ -34,26 +36,29 @@ do I normally tip?", "pay Jim back what I owe him").
 
 ## Results
 
-Six closed- and open-weight models under
+Eight closed- and open-weight models under
 each provider's native CUA agent (Claude uses computer + bash + editor; OpenAI
 uses computer + built-in shell; Qwen main uses computer + bash — see Agents).
-**Perfect** = % of tasks where every rubric passes; **Rubric** = mean rubric
-pass-rate (partial credit).
+Ranked by **Perfect** = % of tasks where every rubric passes; **Rubric** = mean
+rubric pass-rate (partial credit). Updated 2026-07-15 (judge-error rescore +
+GPT-5.6); live table: <https://mypcbench.pages.dev/leaderboard.html>.
 
 | Model | Perfect % | Rubric % |
 |---|--:|--:|
-| Claude Opus 4.6 | **55.4** | **81.8** |
-| Claude Sonnet 4.6 | 39.1 | 65.4 |
-| GPT-5.5 | 29.3 | 54.1 |
-| GPT-5.4 mini | 19.0 | 48.8 |
-| Qwen 3.5 35B-A3B | 7.6 | 42.5 |
-| Qwen 3.5 9B | 2.7 | 7.0 |
+| Claude Opus 4.6 | **58.2** | 85.1 |
+| GPT-5.6-sol | 55.4 | **85.3** |
+| GPT-5.6-luna | 55.4 | 83.2 |
+| Claude Sonnet 4.6 | 50.5 | 78.5 |
+| GPT-5.5 | 45.1 | 83.6 |
+| GPT-5.4 mini | 23.9 | 53.5 |
+| Qwen 3.5 35B-A3B | 7.6 | 42.4 |
+| Qwen 3.5 9B | 6.5 | 24.1 |
 
-Claude Opus 4.6 is the only model above 50 % perfect — and even it solves
-only ~36 % of tasks that span 7+ apps; Sonnet drops to 14 %, GPT-5.5 to
-4.5 %, and GPT-5.4 mini and both Qwen models to 0 % on that slice. Failures
-cluster on long, multi-app trajectories — exactly where personalization
-stresses an assistant most.
+No model clears 60 % perfect, and the gap opens on complexity: on tasks that
+span 7+ apps Claude Opus 4.6 leads with ~36 % perfect, GPT-5.6 (sol/luna) and
+Sonnet hold 18 %, GPT-5.5 9 %, and GPT-5.4 mini and both Qwen models drop
+to 0 %. Failures cluster on long, multi-app trajectories — exactly where
+personalization stresses an assistant most.
 
 ## Quick start
 
@@ -187,7 +192,7 @@ python3 scripts/check-release-image-freshness.py \
 The image is rebuilt, republished, and re-verified daily by CI
 (`.github/workflows/`); the freshness check above is the same gate CI runs.
 
-Requirements: Linux + KVM (`/dev/kvm`) + QEMU, ~16 GB RAM per VM. Docker optional.
+Requirements: Linux + KVM (`/dev/kvm`) + QEMU, ~8 GB RAM and 4 vCPUs per VM (the default `env.py` launch line). Docker optional.
 
 ## Agents
 
@@ -196,7 +201,7 @@ Each agent uses its family's native tool-calling. `cuabash` = computer + bash, `
 | `--agent_type` | Model | Tools | Paper role |
 |---|---|---|---|
 | `claude_cuabash` | `claude-opus-4-6` / `claude-sonnet-4-6` | computer + bash + editor | Claude main |
-| `openai_cuabash` | `gpt-5.5` / `gpt-5.4-mini` | computer + OpenAI built-in shell | GPT main |
+| `openai_cuabash` | `gpt-5.6-sol` / `gpt-5.6-luna` / `gpt-5.5` / `gpt-5.4-mini` | computer + OpenAI built-in shell | GPT main |
 | `qwen_cuabash` | `Qwen/Qwen3.5-35B-A3B` / `-9B` | computer + bash (OSWorld-parity) | Qwen main |
 | `qwen_cua` | same | computer only | Qwen appendix ablation |
 | `dummy` | — | none | sanity / CI (no API cost) |
